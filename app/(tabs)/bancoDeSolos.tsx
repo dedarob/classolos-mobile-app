@@ -1,6 +1,6 @@
 import { Image, View } from "react-native";
 
-export default function Index() {
+export default function bancoDeSolos() {
   return (
     <View
       style={{
