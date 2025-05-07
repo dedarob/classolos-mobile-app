@@ -1,18 +1,27 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
+import { Image } from "react-native";
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "green", // Cor da aba ativa
-        tabBarInactiveTintColor: "gray", // Cor da aba inativa
+        tabBarActiveTintColor: "green",
+        tabBarInactiveTintColor: "gray",
+        headerLeft: () => (
+          <Image
+            source={require("../../assets/images/solos/logo-noback.png")}
+            style={{ width: 40, height: 40, marginLeft: 10 }}
+          />
+        ),
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          headerTitle: "Home",
+          tabBarLabel: "Home",
+
           tabBarIcon: ({ color }) => (
             <Ionicons name="home" size={30} color={color} />
           ),
@@ -21,27 +30,41 @@ export default function TabLayout() {
       <Tabs.Screen
         name="classificar"
         options={{
-          title: "Classificar",
+          headerTitle: "Classificar",
+          tabBarLabel: "Classificar",
           tabBarIcon: ({ color }) => (
-            <Ionicons name="file-tray-stacked" size={30} color={color} />
+            <Ionicons name="layers" size={30} color={color} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="resultados"
+        options={{
+          headerTitle: "Resultados",
+          tabBarLabel: "Resultados",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="analytics" size={30} color={color} />
           ),
         }}
       />
       <Tabs.Screen
         name="bancoDeSolos"
         options={{
-          title: "Banco De Solos",
+          headerTitle: "Banco de Solos",
+          tabBarLabel: "Solos",
           tabBarIcon: ({ color }) => (
             <Ionicons name="earth" size={30} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="resultados"
+        name="detalheSolo/[solo]"
         options={{
-          title: "Resultados",
+          headerShown: false,
+          tabBarLabel: "Detalhes",
           tabBarIcon: ({ color }) => (
-            <Ionicons name="analytics" size={30} color={color} />
+            <Ionicons name="reader" size={30} color={color} />
           ),
         }}
       />

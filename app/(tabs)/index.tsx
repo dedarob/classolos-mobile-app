@@ -10,7 +10,7 @@ export default function Index() {
       }}
     >
       <Image
-        source={require("../../assets/images/logotipo.png")}
+        source={require("../../assets/images/solos/logo-noback.png")}
         style={{ width: 200, height: 200 }}
       />
     </View>

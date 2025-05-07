@@ -2,6 +2,7 @@ import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import {
   Button,
+  Dimensions,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -52,16 +53,19 @@ export default function Classificar() {
   const onSubmit: SubmitHandler<FormData> = (data) => {
     console.log(data);
   };
-
+  const { height } = Dimensions.get("window");
+  const offsetIos = (height * 10) / 100;
+  const offsetAndroid = (height * 15) / 100;
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
+      keyboardVerticalOffset={Platform.OS === "ios" ? offsetIos : offsetAndroid}
     >
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <ScrollView
           contentContainerStyle={{
-            padding: 65,
+            padding: 10,
             flexGrow: 1,
           }}
         >

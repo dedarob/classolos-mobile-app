@@ -10,8 +10,17 @@ interface FieldProps {
 }
 
 const Field: React.FC<FieldProps> = ({ label, name, control, placeholder }) => (
-  <View style={{ marginBottom: 16 }}>
-    <Text>{label}</Text>
+  <View style={{ marginBottom: 20 }}>
+    <Text
+      style={{
+        fontSize: 16,
+        fontWeight: "600",
+        marginBottom: 8,
+        color: "#333",
+      }}
+    >
+      {label}
+    </Text>
     <Controller
       control={control}
       rules={{ required: true }}
@@ -19,15 +28,26 @@ const Field: React.FC<FieldProps> = ({ label, name, control, placeholder }) => (
       render={({ field: { onChange, onBlur, value } }) => (
         <TextInput
           style={{
-            borderWidth: 1,
-            borderColor: "#ccc",
-            marginBottom: 10,
-            padding: 8,
+            height: 48,
+            borderWidth: 1.5,
+            borderColor: "#ddd",
+            borderRadius: 10,
+            paddingHorizontal: 16,
+            paddingVertical: 10,
+            fontSize: 16,
+            backgroundColor: "#fff",
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 2,
           }}
           placeholder={placeholder || label}
+          placeholderTextColor="#aaa"
           onBlur={onBlur}
           onChangeText={onChange}
           value={value}
+          autoCapitalize="none"
         />
       )}
     />
