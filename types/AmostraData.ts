@@ -1,0 +1,34 @@
+export interface AmostraData {
+  identificador: string;
+  localizacao: string;
+  horizonte: string;
+  cor_munsell: string;
+  cor_visual: string;
+  cerosidade: string;
+  areia_grossa: number;
+  areia_fina: number;
+  silte: number;
+  argila_total: number;
+  argila_dispersa: number;
+  grau_floculacao: number;
+  silte_argila: number;
+  silte_areia_fina: number;
+  ph_agua: number;
+  ph_kcl: number;
+  delta_ph: number;
+  ca: number;
+  mg: number;
+  k: number;
+  na: number;
+  al: number;
+  h: number;
+  soma_bases: number;
+  ctct: number;
+  sat_al: number;
+  ctct_efetiva: number;
+  sat_bases: number;
+  retencao_cations: number;
+  atividade_argila: number;
+  cos: number;
+  equivalente_umidade: number;
+}

@@ -1,19 +1,30 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import { Image } from "react-native";
+import { useTheme } from "react-native-paper";
 
 export default function TabLayout() {
+  const theme = useTheme();
+
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "green",
-        tabBarInactiveTintColor: "gray",
+        tabBarActiveTintColor: theme.colors.primary,
+        tabBarInactiveTintColor: theme.colors.onSurfaceVariant || "gray",
+        tabBarStyle: {
+          backgroundColor: theme.colors.surface,
+          borderTopColor: theme.colors.outline,
+        },
         headerLeft: () => (
           <Image
             source={require("../../assets/images/solos/logo-noback.png")}
             style={{ width: 40, height: 40, marginLeft: 10 }}
           />
         ),
+        headerStyle: {
+          backgroundColor: theme.colors.surface,
+        },
+        headerTintColor: theme.colors.primary,
       }}
     >
       <Tabs.Screen
@@ -21,14 +32,13 @@ export default function TabLayout() {
         options={{
           headerTitle: "Home",
           tabBarLabel: "Home",
-
           tabBarIcon: ({ color }) => (
             <Ionicons name="home" size={30} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="classificar"
+        name="amostras"
         options={{
           headerTitle: "Classificar",
           tabBarLabel: "Classificar",
@@ -55,16 +65,6 @@ export default function TabLayout() {
           tabBarLabel: "Solos",
           tabBarIcon: ({ color }) => (
             <Ionicons name="earth" size={30} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="detalheSolo/[solo]"
-        options={{
-          headerShown: false,
-          tabBarLabel: "Detalhes",
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="reader" size={30} color={color} />
           ),
         }}
       />

@@ -76,5 +76,3 @@ export const SOLOS_INFO = {
     culturas: "Culturas adaptadas a solos argilosos e com manejo específico.",
   },
 };
-
-export default {};

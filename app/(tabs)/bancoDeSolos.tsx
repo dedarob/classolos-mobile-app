@@ -1,29 +1,25 @@
 import { useRouter } from "expo-router";
-import {
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
+import { Card, Text, useTheme } from "react-native-paper";
 import { SOLOS_INFO } from "../../data/solo";
 
-export default function bancoDeSolos() {
+export default function BancoDeSolos() {
   const router = useRouter();
+  const theme = useTheme();
+
   const data = Object.entries(SOLOS_INFO).map(([nome, dados]) => ({
     nome,
     ...dados,
   }));
 
   return (
-    <View style={styles.view}>
+    <View style={[styles.view, { backgroundColor: theme.colors.background }]}>
       <FlatList
         data={data}
-        contentContainerStyle={{ padding: 8 }}
+        contentContainerStyle={styles.listContainer}
         keyExtractor={(item) => item.nome}
         renderItem={({ item }) => (
-          <TouchableOpacity
+          <Card
             style={styles.card}
             onPress={() =>
               router.push({
@@ -32,9 +28,13 @@ export default function bancoDeSolos() {
               })
             }
           >
-            <Image source={item.imagem} style={styles.image} />
-            <Text style={styles.title}>{item.nome}</Text>
-          </TouchableOpacity>
+            <Card.Cover source={item.imagem} style={styles.image} />
+            <Card.Content>
+              <Text variant="titleMedium" style={styles.title}>
+                {item.nome}
+              </Text>
+            </Card.Content>
+          </Card>
         )}
       />
     </View>
@@ -43,25 +43,21 @@ export default function bancoDeSolos() {
 
 const styles = StyleSheet.create({
   view: {
-    height: "100%",
-    width: "100%",
+    flex: 1,
+  },
+  listContainer: {
+    padding: 12,
   },
   card: {
-    width: "100%",
-    height: 200,
     marginBottom: 16,
-    backgroundColor: "#eee",
     borderRadius: 12,
     overflow: "hidden",
   },
   image: {
-    width: "100%",
-    height: 120,
+    height: 140,
   },
   title: {
-    padding: 8,
-    fontWeight: "bold",
-    fontSize: 16,
+    marginTop: 8,
     textAlign: "center",
   },
 });
