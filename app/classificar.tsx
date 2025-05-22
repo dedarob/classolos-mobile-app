@@ -1,3 +1,6 @@
+import { AmostraData } from "@/types/AmostraData";
+import axios from "axios";
+import Constants from "expo-constants";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -9,17 +12,18 @@ import {
   ScrollView,
   StyleSheet,
   TouchableWithoutFeedback,
+  View,
 } from "react-native";
-import { Button, Text, useTheme } from "react-native-paper";
+import { ActivityIndicator, Button, Text, useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useAmostras } from "../contexts/AmostrasContext";
 import FormComponent from "./components/formComponent";
-
 export default function Classificar() {
+  const [isLoading, setIsLoading] = useState(false);
   const { total, indice } = useLocalSearchParams();
   const totalAmostras = total ? parseInt(total as string) : 0;
   const indiceNumero = indice ? parseInt(indice as string) : 0;
-
+  const apiPath = "/classificar";
   const navigation = useNavigation();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
@@ -27,8 +31,8 @@ export default function Classificar() {
 
   const { dadosAmostras, setDadosAmostras } = useAmostras();
 
-  const { control, handleSubmit, reset } = useForm<FormData>({
-    defaultValues: {} as FormData,
+  const { control, handleSubmit, reset } = useForm<AmostraData>({
+    defaultValues: {} as AmostraData,
   });
 
   const [indiceAtual, setIndiceAtual] = useState(indiceNumero);
@@ -44,7 +48,7 @@ export default function Classificar() {
     if (dadosAmostras[indiceNumero]) {
       reset(dadosAmostras[indiceNumero]);
     } else {
-      reset({} as FormData);
+      reset({} as AmostraData);
     }
 
     setIndiceAtual(indiceNumero);
@@ -57,15 +61,48 @@ export default function Classificar() {
     totalAmostras,
   ]);
 
-  const onSubmit: SubmitHandler<FormData> = (data) => {
+  const onSubmit: SubmitHandler<AmostraData> = (data) => {
     const newDados = [...dadosAmostras];
     newDados[indiceAtual] = data;
     setDadosAmostras(newDados);
+    console.log("onSubmit - índice:", indiceAtual);
+    console.log("onSubmit - data:", data);
+    console.log("onSubmit - dadosAmostras:", newDados);
   };
 
   const { height } = Dimensions.get("window");
   const offsetIos = (height * 10) / 100;
   const offsetAndroid = (height * 15) / 100;
+  const [backendResponse, setBackendResponse] = useState<string | null>(null);
+  const API_URL =
+    Constants.expoConfig?.extra?.API_URL ?? "http://localhost:3000";
+  function sendData(amostras: AmostraData[]) {
+    const payload = amostras.map((dado) => ({ dados: dado }));
+    setIsLoading(true);
+    axios
+      .post(`${API_URL}/api/solo/classificar`, payload)
+      .then((res: { data: any }) => {
+        console.log("Resposta backend:", res.data);
+        router.push({
+          pathname: "/resultados",
+          params: {
+            response: JSON.stringify(res.data),
+          },
+        });
+      })
+      .catch((err: any) => {
+        const errorData = err.response?.data || err.message;
+        router.push({
+          pathname: "/resultados",
+          params: {
+            response: JSON.stringify({ error: errorData }),
+          },
+        });
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }
 
   return (
     <KeyboardAvoidingView
@@ -136,9 +173,11 @@ export default function Classificar() {
             mode="contained"
             onPress={() => {
               handleSubmit((data) => {
-                onSubmit(data);
-                console.log("Dados finais das amostras:", dadosAmostras);
-                // todo: jogar pro backend via axios
+                const newDados = [...dadosAmostras];
+                newDados[indiceAtual] = data;
+                setDadosAmostras(newDados);
+                console.log("Finalizando com dados atualizados:", newDados);
+                sendData(newDados);
               })();
             }}
             style={[styles.button, { marginTop: 30 }]}
@@ -148,6 +187,11 @@ export default function Classificar() {
           </Button>
         </ScrollView>
       </TouchableWithoutFeedback>
+      {isLoading && (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color={theme.colors.primary} />
+        </View>
+      )}
     </KeyboardAvoidingView>
   );
 }
@@ -161,5 +205,21 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 20,
     borderRadius: 8,
+  },
+  loadingOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 999,
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: "#fff",
   },
 });

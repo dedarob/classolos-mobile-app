@@ -7,7 +7,7 @@ export const darkTheme = {
   ...DarkTheme,
   colors: {
     ...DarkTheme.colors,
-    primary: "#BB86FC",
+    primary: "#3CB371",
     secondary: "#03DAC6",
     background: "#121212",
     surface: "#1E1E1E",

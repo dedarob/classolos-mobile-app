@@ -1,8 +1,9 @@
+import { AmostraData } from "@/types/AmostraData";
 import React, { createContext, ReactNode, useContext, useState } from "react";
 
 interface AmostrasContextType {
-  dadosAmostras: FormData[];
-  setDadosAmostras: React.Dispatch<React.SetStateAction<FormData[]>>;
+  dadosAmostras: AmostraData[];
+  setDadosAmostras: React.Dispatch<React.SetStateAction<AmostraData[]>>;
 }
 
 const AmostrasContext = createContext<AmostrasContextType | undefined>(
@@ -10,7 +11,7 @@ const AmostrasContext = createContext<AmostrasContextType | undefined>(
 );
 
 export function AmostrasProvider({ children }: { children: ReactNode }) {
-  const [dadosAmostras, setDadosAmostras] = useState<FormData[]>([]);
+  const [dadosAmostras, setDadosAmostras] = useState<AmostraData[]>([]);
 
   return (
     <AmostrasContext.Provider value={{ dadosAmostras, setDadosAmostras }}>

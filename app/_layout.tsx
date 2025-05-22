@@ -2,7 +2,7 @@ import { Stack } from "expo-router";
 import React from "react";
 import { useColorScheme } from "react-native";
 import { PaperProvider } from "react-native-paper";
-import { SafeAreaProvider } from "react-native-safe-area-context"; // <-- import this
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AmostrasProvider } from "../contexts/AmostrasContext";
 import { darkTheme, theme } from "../themes/theme";
 export default function RootLayout() {
