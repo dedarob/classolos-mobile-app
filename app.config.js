@@ -2,14 +2,21 @@ import "dotenv/config";
 
 export default {
   expo: {
-    name: "solosbr",
+    name: "ClasSolosBr",
     slug: "solosbr",
     version: "1.0.0",
     orientation: "portrait",
-    icon: "./assets/images/icon.png",
+    icon: "./assets/images/solos/logo-noback.png",
     scheme: "solosbr",
     userInterfaceStyle: "automatic",
     newArchEnabled: true,
+
+    splash: {
+      image: "./assets/images/solos/logo-noback.png",
+      resizeMode: "contain",
+      backgroundColor: "#ffffff",
+    },
+
     ios: {
       supportsTablet: true,
     },
@@ -30,7 +37,7 @@ export default {
       [
         "expo-splash-screen",
         {
-          image: "./assets/images/splash-icon.png",
+          image: "./assets/images/solos/logo-noback.png",
           imageWidth: 200,
           resizeMode: "contain",
           backgroundColor: "#ffffff",

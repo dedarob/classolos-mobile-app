@@ -18,16 +18,18 @@ import { ActivityIndicator, Button, Text, useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useAmostras } from "../contexts/AmostrasContext";
 import FormComponent from "./components/formComponent";
+
 export default function Classificar() {
   const [isLoading, setIsLoading] = useState(false);
+
   const { total, indice } = useLocalSearchParams();
-  const totalAmostras = total ? parseInt(total as string) : 0;
-  const indiceNumero = indice ? parseInt(indice as string) : 0;
-  const apiPath = "/classificar";
+  const totalAmostras = total ? parseInt(total as string, 10) : 0;
+  const indiceNumero = indice ? parseInt(indice as string, 10) : 0;
+
   const navigation = useNavigation();
+  const router = useRouter();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
-  const router = useRouter();
 
   const { dadosAmostras, setDadosAmostras } = useAmostras();
 
@@ -36,6 +38,9 @@ export default function Classificar() {
   });
 
   const [indiceAtual, setIndiceAtual] = useState(indiceNumero);
+  const [formStep, setFormStep] = useState(0);
+
+  const TOTAL_STEPS = 4;
 
   useEffect(() => {
     navigation.setOptions({
@@ -52,6 +57,7 @@ export default function Classificar() {
     }
 
     setIndiceAtual(indiceNumero);
+    setFormStep(0);
   }, [
     indiceNumero,
     dadosAmostras,
@@ -65,24 +71,22 @@ export default function Classificar() {
     const newDados = [...dadosAmostras];
     newDados[indiceAtual] = data;
     setDadosAmostras(newDados);
-    console.log("onSubmit - índice:", indiceAtual);
-    console.log("onSubmit - data:", data);
-    console.log("onSubmit - dadosAmostras:", newDados);
   };
 
   const { height } = Dimensions.get("window");
   const offsetIos = (height * 10) / 100;
   const offsetAndroid = (height * 15) / 100;
-  const [backendResponse, setBackendResponse] = useState<string | null>(null);
+
   const API_URL =
     Constants.expoConfig?.extra?.API_URL ?? "http://localhost:3000";
+
   function sendData(amostras: AmostraData[]) {
     const payload = amostras.map((dado) => ({ dados: dado }));
     setIsLoading(true);
+
     axios
       .post(`${API_URL}/api/solo/classificar`, payload)
-      .then((res: { data: any }) => {
-        console.log("Resposta backend:", res.data);
+      .then((res) => {
         router.push({
           pathname: "/resultados",
           params: {
@@ -90,7 +94,7 @@ export default function Classificar() {
           },
         });
       })
-      .catch((err: any) => {
+      .catch((err) => {
         const errorData = err.response?.data || err.message;
         router.push({
           pathname: "/resultados",
@@ -106,7 +110,7 @@ export default function Classificar() {
 
   return (
     <KeyboardAvoidingView
-      behavior="padding"
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
       style={[styles.flex, { backgroundColor: theme.colors.background }]}
       keyboardVerticalOffset={Platform.OS === "ios" ? offsetIos : offsetAndroid}
     >
@@ -116,58 +120,81 @@ export default function Classificar() {
             styles.scrollContainer,
             { paddingBottom: insets.bottom + 20 },
           ]}
+          keyboardShouldPersistTaps="handled"
         >
           <Text variant="headlineMedium" style={{ marginBottom: 20 }}>
             Classificação de Dados
           </Text>
 
-          <FormComponent control={control} />
+          <FormComponent
+            control={control}
+            step={formStep}
+            setStep={setFormStep}
+            totalSteps={TOTAL_STEPS}
+          />
 
-          <Button
-            mode="contained"
-            onPress={() => {
-              if (indiceAtual > 0) {
-                handleSubmit((data) => {
-                  onSubmit(data);
-                  router.push({
-                    pathname: "/classificar",
-                    params: {
-                      total: totalAmostras.toString(),
-                      indice: (indiceAtual - 1).toString(),
-                    },
-                  });
-                })();
-              }
+          <View
+            style={{
+              marginTop: 40,
+              paddingTop: 20,
+              borderTopWidth: 1,
+              borderColor: theme.colors.outline,
             }}
-            style={styles.button}
-            contentStyle={{ paddingVertical: 8 }}
-            disabled={indiceAtual === 0}
           >
-            Anterior
-          </Button>
+            <Button
+              mode="contained"
+              onPress={() => {
+                if (indiceAtual > 0) {
+                  handleSubmit((data) => {
+                    onSubmit(data);
+                    router.push({
+                      pathname: "/classificar",
+                      params: {
+                        total: totalAmostras.toString(),
+                        indice: (indiceAtual - 1).toString(),
+                      },
+                    });
+                  })();
+                }
+              }}
+              style={[
+                styles.button,
+                { backgroundColor: theme.colors.secondaryContainer },
+              ]}
+              labelStyle={{ color: theme.colors.onSecondaryContainer }}
+              contentStyle={{ paddingVertical: 8 }}
+              disabled={indiceAtual === 0}
+            >
+              Amostra anterior
+            </Button>
 
-          <Button
-            mode="contained"
-            onPress={() => {
-              if (indiceAtual + 1 < totalAmostras) {
-                handleSubmit((data) => {
-                  onSubmit(data);
-                  router.push({
-                    pathname: "/classificar",
-                    params: {
-                      total: totalAmostras.toString(),
-                      indice: (indiceAtual + 1).toString(),
-                    },
-                  });
-                })();
-              }
-            }}
-            style={styles.button}
-            contentStyle={{ paddingVertical: 8 }}
-            disabled={indiceAtual + 1 >= totalAmostras}
-          >
-            Próximo
-          </Button>
+            <Button
+              mode="contained"
+              onPress={() => {
+                if (indiceAtual + 1 < totalAmostras) {
+                  handleSubmit((data) => {
+                    onSubmit(data);
+                    router.push({
+                      pathname: "/classificar",
+                      params: {
+                        total: totalAmostras.toString(),
+                        indice: (indiceAtual + 1).toString(),
+                      },
+                    });
+                  })();
+                }
+              }}
+              style={[
+                styles.button,
+                { backgroundColor: theme.colors.secondaryContainer },
+              ]}
+              labelStyle={{ color: theme.colors.onSecondaryContainer }}
+              contentStyle={{ paddingVertical: 8 }}
+              disabled={indiceAtual + 1 >= totalAmostras}
+            >
+              Próxima amostra
+            </Button>
+          </View>
 
           <Button
             mode="contained"
@@ -176,17 +203,19 @@ export default function Classificar() {
                 const newDados = [...dadosAmostras];
                 newDados[indiceAtual] = data;
                 setDadosAmostras(newDados);
-                console.log("Finalizando com dados atualizados:", newDados);
                 sendData(newDados);
               })();
             }}
             style={[styles.button, { marginTop: 30 }]}
             contentStyle={{ paddingVertical: 8 }}
+            loading={isLoading}
+            disabled={isLoading}
           >
             Terminar classificação
           </Button>
         </ScrollView>
       </TouchableWithoutFeedback>
+
       {isLoading && (
         <View style={styles.loadingOverlay}>
           <ActivityIndicator size="large" color={theme.colors.primary} />
@@ -216,10 +245,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     zIndex: 999,
-  },
-  loadingText: {
-    marginTop: 10,
-    fontSize: 16,
-    color: "#fff",
   },
 });
