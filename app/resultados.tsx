@@ -1,4 +1,3 @@
-// Resultados.tsx
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { Platform, ScrollView, StyleSheet, View } from "react-native";
@@ -73,12 +72,10 @@ export default function Resultados() {
     try {
       const base64Image = await getImageBase64();
 
-      // Garante que parsedResponse é array para iterar ou cria array com 1 item
       const samples = Array.isArray(parsedResponse)
-        ? parsedResponse.slice(0, 99) // até 99 amostras
+        ? parsedResponse.slice(0, 99)
         : [parsedResponse];
 
-      // Função para normalizar strings (identificador, localizacao)
       const normalize = (str: string) =>
         String(str || "")
           .normalize("NFD")
@@ -89,7 +86,6 @@ export default function Resultados() {
           .toLowerCase()
           .trim();
 
-      // Monta HTML com info de cada amostra para cabeçalho
       const headerInfoHtml = samples
         .map((item, i) => {
           const identificadorRaw =
@@ -111,7 +107,6 @@ export default function Resultados() {
         })
         .join("\n");
 
-      // Para nome do arquivo, junta os identificadores das primeiras 3 amostras (exemplo)
       const nomeArquivo =
         samples
           .slice(0, 3)
@@ -119,7 +114,6 @@ export default function Resultados() {
           .filter(Boolean)
           .join("_") || "classificacao";
 
-      // Conteúdo HTML completo
       const htmlContent = `
       <html>
         <head>

@@ -1,5 +1,3 @@
-import "dotenv/config";
-
 export default {
   expo: {
     name: "ClasSolosBr",
@@ -20,18 +18,24 @@ export default {
     ios: {
       supportsTablet: true,
     },
+
     android: {
+      package: "com.dedarob.solosbr",
       adaptiveIcon: {
         foregroundImage: "./assets/images/adaptive-icon.png",
         backgroundColor: "#ffffff",
       },
       edgeToEdgeEnabled: true,
+
+      usesCleartextTraffic: true,
     },
+
     web: {
       bundler: "metro",
       output: "static",
       favicon: "./assets/images/favicon.png",
     },
+
     plugins: [
       "expo-router",
       [
@@ -44,11 +48,16 @@ export default {
         },
       ],
     ],
+
     experiments: {
       typedRoutes: true,
     },
+
     extra: {
       API_URL: process.env.API_URL,
+      eas: {
+        projectId: "738430a0-bf4f-4ab3-9523-d732ee3f2144",
+      },
     },
   },
 };

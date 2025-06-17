@@ -95,7 +95,6 @@ const ALL_FIELDS: { label: string; name: string }[] = [
   { label: "Equivalente umidade (%)", name: "equivalente_umidade" },
 ];
 
-// Número de campos por etapa
 const FIELDS_PER_STEP = 5;
 
 const FormComponent: React.FC<FormComponentProps> = ({
@@ -105,10 +104,8 @@ const FormComponent: React.FC<FormComponentProps> = ({
 }) => {
   const theme = useTheme();
 
-  // Calcular total de etapas com base nos campos e campos por etapa
   const totalSteps = Math.ceil(ALL_FIELDS.length / FIELDS_PER_STEP);
 
-  // Pegar os campos da etapa atual
   const startIndex = step * FIELDS_PER_STEP;
   const fieldsForStep = ALL_FIELDS.slice(
     startIndex,

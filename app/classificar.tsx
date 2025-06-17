@@ -1,9 +1,4 @@
-import { AmostraData } from "@/types/AmostraData";
-import axios from "axios";
-import Constants from "expo-constants";
-import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { ActivityIndicator, Button, Text, useTheme } from "react-native-paper";
 import {
   Dimensions,
   Keyboard,
@@ -14,10 +9,16 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { ActivityIndicator, Button, Text, useTheme } from "react-native-paper";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useAmostras } from "../contexts/AmostrasContext";
+import React, { useEffect, useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
+
+import { AmostraData } from "@/types/AmostraData";
+import Constants from "expo-constants";
 import FormComponent from "./components/formComponent";
+import axios from "axios";
+import { useAmostras } from "../contexts/AmostrasContext";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Classificar() {
   const [isLoading, setIsLoading] = useState(false);
@@ -79,6 +80,8 @@ export default function Classificar() {
 
   const API_URL =
     Constants.expoConfig?.extra?.API_URL ?? "http://localhost:3000";
+
+  console.log("API_URL is:", API_URL);
 
   function sendData(amostras: AmostraData[]) {
     const payload = amostras.map((dado) => ({ dados: dado }));
